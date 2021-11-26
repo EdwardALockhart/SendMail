@@ -1,4 +1,4 @@
-def send_attachments(user, app_pwd, recipient, subject, body, files, server, port):
+def send_mail_attachments(user, app_pwd, recipient, subject, body, files, server, port):
     import smtplib
     from os.path import basename
     from email.mime.application import MIMEApplication
@@ -25,7 +25,7 @@ def send_attachments(user, app_pwd, recipient, subject, body, files, server, por
         mail.sendmail(user, recipient, msg.as_string())
         mail.close()
 
-send_attachments(user = 'test@gmail.com',
+send_mail_attachments(user = 'test@gmail.com',
                  app_pwd = '',
                  recipient = '',
                  subject = 'subject',
