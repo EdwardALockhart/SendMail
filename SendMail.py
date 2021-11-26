@@ -1,4 +1,4 @@
-def send_mail(user, app_pwd, recipient, subject, body, files, server, port):
+def send_attachments(user, app_pwd, recipient, subject, body, files, server, port):
     import smtplib
     from os.path import basename
     from email.mime.application import MIMEApplication
