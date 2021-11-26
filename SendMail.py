@@ -1,25 +1,35 @@
-def send_mail(user, app_pwd, recipient, subject, body, server, port):
+def send_mail(user, app_pwd, recipient, subject, body, files, server, port):
     import smtplib
-    from email.message import EmailMessage
+    from os.path import basename
+    from email.mime.application import MIMEApplication
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
 
-    message = EmailMessage()
-    message['From'] = user
-    message['To'] = recipient
-    message['Subject'] = subject
-    message.set_content(body)
+    msg = MIMEMultipart()
+    msg['From'] = user
+    msg['To'] = recipient
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body))
+
+    for i in files or []:
+        with open(i, 'rb') as file:
+            part = MIMEApplication(file.read(), Name = basename(i))
+        part['Content-Disposition'] = 'attachment; filename = "%s"' % basename(i)
+        msg.attach(part)
 
     with smtplib.SMTP(server, port, timeout = 15) as mail:
         mail.ehlo() # Identify ourselves
         mail.starttls() # Start encryption
         mail.ehlo() # Identify ourselves as encrypted
         mail.login(user, app_pwd)
-        mail.send_message(message)
+        mail.sendmail(user, recipient, msg.as_string())
         mail.close()
 
-send_mail(user = "test@gmail.com",
-          app_pwd = "",
-          recipient = "",
-          subject = 'subject',
-          body = 'body',
-          server = "smtp.gmail.com",
-          port = 587,)
+send_attachments(user = 'test@gmail.com',
+                 app_pwd = '',
+                 recipient = '',
+                 subject = 'subject',
+                 body = 'body',
+                 files = ["/home/Documents/file1.csv", "/home/Documents/file2.csv"],
+                 server = 'smtp.gmail.com',
+                 port = 587,)
