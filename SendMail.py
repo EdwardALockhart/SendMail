@@ -1,4 +1,4 @@
-def send_mail_attachments(user, app_pwd, recipient, subject, body, files, server, port):
+def send_mail_attachments(user, app_pwd, recipient, subject, body, files, smtp_server, smtp_port):
     import smtplib
     from os.path import basename
     from email.mime.application import MIMEApplication
@@ -17,7 +17,7 @@ def send_mail_attachments(user, app_pwd, recipient, subject, body, files, server
         part["Content-Disposition"] = 'attachment; filename = "%s"' % basename(i)
         msg.attach(part)
 
-    with smtplib.SMTP(server, port, timeout = 15) as mail:
+    with smtplib.SMTP(smtp_server, smtp_port, timeout = 15) as mail:
         mail.ehlo() # Identify ourselves
         mail.starttls() # Start encryption
         mail.ehlo() # Identify ourselves as encrypted
@@ -26,11 +26,11 @@ def send_mail_attachments(user, app_pwd, recipient, subject, body, files, server
         mail.close() 
     print("Transmitted")
 
-send_mail_attachments(user = "",
+send_mail_attachments(user = "test@gmail.com",
                       app_pwd = "",
                       recipient = "",
                       subject = "",
                       body = "",
                       files = ["/file1.txt", "/file2.txt"],
-                      server = "",
-                      port = 999)
+                      smtp_server = "smtp.gmail.com",
+                      smtp_port = 587
