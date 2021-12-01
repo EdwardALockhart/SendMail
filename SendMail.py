@@ -4,17 +4,17 @@ def send_mail_attachments(user, app_pwd, recipient, subject, body, files, server
     from email.mime.application import MIMEApplication
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
-
+    
     msg = MIMEMultipart()
-    msg['From'] = user
-    msg['To'] = recipient
-    msg['Subject'] = subject
+    msg["From"] = user
+    msg["To"] = recipient
+    msg["Subject"] = subject
     msg.attach(MIMEText(body))
 
     for i in files or []:
-        with open(i, 'rb') as file:
+        with open(i, "rb") as file:
             part = MIMEApplication(file.read(), Name = basename(i))
-        part['Content-Disposition'] = 'attachment; filename = "%s"' % basename(i)
+        part["Content-Disposition"] = 'attachment; filename = "%s"' % basename(i)
         msg.attach(part)
 
     with smtplib.SMTP(server, port, timeout = 15) as mail:
@@ -23,13 +23,14 @@ def send_mail_attachments(user, app_pwd, recipient, subject, body, files, server
         mail.ehlo() # Identify ourselves as encrypted
         mail.login(user, app_pwd)
         mail.sendmail(user, recipient, msg.as_string())
-        mail.close()
+        mail.close() 
+    print("Transmitted")
 
-send_mail_attachments(user = 'test@gmail.com',
-                 app_pwd = '',
-                 recipient = '',
-                 subject = 'subject',
-                 body = 'body',
-                 files = ["/home/Documents/file1.csv", "/home/Documents/file2.csv"],
-                 server = 'smtp.gmail.com',
-                 port = 587,)
+send_mail_attachments(user = "",
+                      app_pwd = "",
+                      recipient = "",
+                      subject = "",
+                      body = "",
+                      files = ["/file1.txt", "/file2.txt"],
+                      server = "",
+                      port = 999)
